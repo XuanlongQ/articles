@@ -8,7 +8,7 @@ Mixed-effects regression is useful in many areas of research, such as psychology
 
 Before we can fit a mixed-effects regression model, we need to prepare our data. In this example, we will use a dataset of students' test scores and their demographic information. The data is organized into three levels of grouping: classroom, school, and province. Each student is assigned a unique identifier (`student_id`) to track their scores across different levels of grouping.
 
-you can use the following code to create your dataset,
+You can use the following code to create your dataset,
 
 ```python
 import pandas as pd
@@ -44,7 +44,6 @@ students.to_csv('your_data_file.csv', index=False)
 
 We can load the data into a pandas DataFrame using the `read_csv()` function:
 ```python
-kotlinCopy
 import pandas as pd
 data = pd.read_csv('your_data_file.csv')
 ```
@@ -56,7 +55,6 @@ To specify a mixed-effects regression model using `statsmodels`, we can use the 
 For example, if we want to include fixed effects for age and sex, and random intercepts for classroom, school, and province, we can specify the formula as follows:
 
 ```python
-iniCopy
 import statsmodels.formula.api as smf
 
 formula = 'test_score ~ age + sex + (1|classroom) + (1|school) + (1|province)'
@@ -71,7 +69,6 @@ In this formula, `age` and `sex` are fixed effects, while `(1|classroom)`, `(1|s
 To include random slopes in the model, we can modify the formula to specify the grouping variable for each random slope. For example, if we want to include a random slope for age nested within each classroom, we can modify the formula as follows:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (age|classroom) + (1|school) + (1|province)'
 ```
 
@@ -84,7 +81,6 @@ The covariance structure of the random effects can be specified using the `vc_fo
 The `vc_formula` argument specifies the covariance structure for the random effects at each level of grouping. For example, if we want to specify a diagonal variance-covariance matrix for the random effects at each level of grouping, we can use the following code:
 
 ```python
-iniCopy
 vc_formula = {'classroom': 'diag', 'school': 'diag', 'province': 'diag'}
 
 model = smf.mixedlm(formula, data, groups=data['student_id'], vc_formula=vc_formula).fit()
@@ -93,7 +89,6 @@ model = smf.mixedlm(formula, data, groups=data['student_id'], vc_formula=vc_form
 The `re_formula` argument specifies the variance-covariance structure for the random intercepts only. For example, if we want to include random intercepts for all grouping variables, we can use the following code:
 
 ```python
-iniCopy
 re_formula = {'classroom': '~1', 'school': '~1', 'province': '~1'}
 
 model = smf.mixedlm(formula, data, groups=data['student_id'], re_formula=re_formula).fit()
@@ -116,21 +111,18 @@ The formula for a mixed-effects regression model in Python uses the Patsy formul
 The fixed factors are included in the formula using standard mathematical notation. For example, if we want to include fixed effects for age and sex, we can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + ...'
 ```
 
 The random factors are included in the formula using the `(1|group)` syntax. For example, if we want to include random intercepts for classroom, school, and province, we can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (1|classroom) + (1|school) + (1|province)'
 ```
 
 We can also include random slopes for a variable using the `(variable|group)` syntax. For example, if we want to include random slopes for age nested within each classroom, school, and province, we can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (age|classroom) + (age|school) + (age|province)'
 ```
 
@@ -143,7 +135,6 @@ Here are some examples of how to specify the formula for a mixed-effects regress
 Suppose we want to fit a mixed-effects regression model with random intercepts for classroom, school, and province. We can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (1|classroom) + (1|school) + (1|province)'
 ```
 
@@ -154,7 +145,6 @@ This formula specifies that `test_score` is the outcome variable, `age` and `sex
 Suppose we want to fit a mixed-effects regression model with random intercepts and slopes for age nested within each classroom, school, and province. We can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (age|classroom) + (age|school) + (age|province)'
 ```
 
@@ -165,7 +155,6 @@ This formula specifies that `test_score` is the outcome variable, `age` and `sex
 Suppose we want to fit a mixed-effects regression model with crossed random effects for classroom and school. We can specify the formula as:
 
 ```python
-iniCopy
 formula = 'test_score ~ age + sex + (1|classroom) + (1|school:classroom)'
 ```
 
@@ -174,35 +163,14 @@ This formula specifies that `test_score` is the outcome variable, `age` and `sex
 we have discussed how to specify the formula for a mixed-effects regression model in Python using the Patsy formula language. We have provided examples of how to include fixed and random factors in the formula, including random intercepts and slopes, and crossed random effects. By following these rules and examples, you can build powerful mixed-effects regression models to analyze your data with multiple levels of grouping.
 
 
-
-Here are example formulas for fitting mixed-effects regression models with different types of random effects:
-
-1) Random intercepts only:
-
-```python
-formula = 'test_score ~ age + sex + (1|classroom) + (1|school) + (1|province)'
-```
-
-This formula includes fixed effects for age and sex, and random intercepts for classroom, school, and province.
-
-2) Random intercepts and slopes:
-
-```python
-formula = 'test_score ~ age + sex + (age|classroom) + (age|school) + (age|province)'
-```
-
-This formula includes fixed effects for age and sex, and random intercepts and slopes for classroom, school, and province.
-
-3) Crossed random effects:
-
-```python
-formula = 'test_score ~ age + sex + (1|classroom) + (1|school) + (1|province) + (1|student_id)'
-```
-
-This formula includes fixed effects for age and sex, and random intercepts for classroom, school, province, and student_id. Here, student_id is a grouping variable that is independent of the other grouping variables.
-
 You can use these formulas with the `mixedlm()` function in the `statsmodels.formula.api` module to fit mixed-effects regression models to your dataset.
 
 # Conclusion
 
 Mixed-effects regression is a powerful statistical method that allows us to analyze data with multiple levels of grouping. In Python, we can use the `statsmodels` library to specify and fit mixed-effects regression models using a formula syntax. We can also interpret the parameters in these models to gain insights into how different factors influence our outcome variable.
+
+
+# Reference
+1. [The package of Patsy - click](https://learn-scikit.oneoffcoder.com/patsy.html#Patsy) - handbook
+2. [How formulas work - click](https://patsy.readthedocs.io/en/latest/formulas.html) - handbook
+3. [Mixed-effect regression - click](https://www.pythonfordatascience.org/mixed-effects-regression-python/) - there are some exapmles.
