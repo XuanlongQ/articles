@@ -1,5 +1,140 @@
 # Comments of "bicop.ado" file.md
 
+## Proggram Replay
+```
+program Replay, eclass
+	syntax [, Level(cilevel)]
+```
+This line sets up the syntax for the Estimate command, allowing the user to specify the confidence level for confidence intervals using the option Level(cilevel).
+```
+	local copula `e(copula)'
+	local mixture `e(mixture)'
+```
+These lines store the values of the system variables e(copula) and e(mixture) in local macros copula and mixture, respectively. These variables contain information about the specified copula type and mixture option.
+```
+	if "`copula'" == "indep" & "`mixture'" == "none" {
+		ml display, level(`level') nolstretch
+	}
+	else {
+		ml display, level(`level') nolstretch plus 
+	}
+```
+These lines display the output of the estimation. If the copula type is "indep" and the mixture option is "none", it displays the estimation results without any additional information. Otherwise, it displays the estimation results with additional information using the plus option.
+```	
+	//	Set up diparm for dependency parameter to be reported in natural form
+	local temp = -invnormal((1-(`level'/100))/2) // use level to calculate z value for ci
+	
+	if "`copula'" == "gaussian" {
+		_diparm depend, tanh prob notab
+		 output_line "theta" `r(est)' `r(se)' `r(z)' `r(p)' `temp'		 
+	}
+    if "`copula'" == "frank" {
+       	_diparm depend, f(@) derivative(1) prob notab
+		output_line "theta" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+	}
+    if "`copula'" == "clayton" {
+      	_diparm depend, f(exp(@)) derivative(exp(@)) prob notab 
+		output_line "theta" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+	}
+    if "`copula'" == "joe"|"`copula'" == "gumbel" {
+       	_diparm depend, f(exp(@)+1) derivative(exp(@)) prob notab
+		output_line "theta" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+	}
+
+
+	if "`copula'" != "indep" {	
+		matrix theta = r(est)
+		mat colnames theta = theta
+	}
+	
+	if "`copula'" == "indep" {
+		matrix extpar = 1
+	}
+	else {
+		matrix extpar = theta
+	}
+	
+	// set up diparm for mixture parameters to be reported in natural form
+	
+	if "`mixture'" == "both" | "`mixture'" == "mix1" | "`mixture'" == "equal" {
+		_diparm pu1, invlogit prob notab
+		output_line "pi_u_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = r(est)
+		_diparm pu1, func(1/(1+exp(@))) der(-exp(@)/((1+exp(@))^2)) prob notab
+		output_line "pi_u_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = u , r(est)
+		_diparm pu1 mu2, func(-(@2)/exp(@1)) der(@2/exp(@1) (-1/exp(@1))) prob notab
+		output_line "mean_u_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = u , r(est)
+		_diparm mu2, func(@) der(1) prob notab
+		output_line "mean_u_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = u , r(est)
+		_diparm pu1 mu2 su2, func((1+exp(@1)-((@3^2)+(@2^2)))/exp(@1)-(-@2/exp(@1))^2) der(1-(1+exp(@1)-((@3^2)+(@2^2)))/exp(@1)+2*(@2/exp(@1))^2 ((@2/exp(@1))*(-2-exp(-@1))) (-2*@3/exp(@1))) prob notab			
+		output_line "var_u_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = u , r(est)
+		_diparm su2, func(@^2) der(2*@) prob notab
+		output_line "var_u_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix u = u , r(est)
+		mat colnames u = pi_u_1 pi_u_2 mean_u_1 mean_u_2 var_u_1 var_u_2
+		matrix extpar = extpar,u
+	}
+		
+	if "`mixture'" == "both" | "`mixture'" == "mix2" {
+		_diparm pv1, invlogit prob notab
+		output_line "pi_v_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = r(est)
+		_diparm pv1, func(1/(1+exp(@))) der(-exp(@)/((1+exp(@))^2)) prob notab
+		output_line "pi_v_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = v , r(est)
+		_diparm pv1 mv2, func(-(@2)/exp(@1)) der(@2/exp(@1) (-1/exp(@1)))prob notab
+		output_line "mean_v_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = v , r(est)
+		_diparm mv2, func(@) der(1) prob notab
+		output_line "mean_v_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = v , r(est)
+		_diparm pv1 mv2 sv2, func((1+exp(@1)-((@3^2)+(@2^2)))/exp(@1)-(-@2/exp(@1))^2) der(1-(1+exp(@1)-((@3^2)+(@2^2)))/exp(@1)+2*(@2/exp(@1))^2 ((@2/exp(@1))*(-2-exp(-@1))) (-2*@3/exp(@1)))prob notab
+		output_line "var_v_1" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = v , r(est)
+		_diparm sv2, func(@^2) der(2*@) prob notab
+		output_line "var_v_2" `r(est)' `r(se)' `r(z)' `r(p)' `temp'
+		matrix v = v , r(est)
+		mat colnames v = pi_v_1 pi_v_2 mean_v_1 mean_v_2 var_v_1 var_v_2
+		matrix extpar = extpar,v
+	}
+	
+	if  "`copula'" != "indep" {
+		ereturn matrix extpar extpar
+		di as text "{hline 13}{c BT}{hline 64}"
+	} 
+	
+	else if  "`copula'" == "indep"  & colsof(extpar) > 1  {
+		matrix extpar = extpar[1, 2.. colsof(extpar) ]
+		ereturn matrix extpar extpar	
+		di as text "{hline 13}{c BT}{hline 64}"
+	}
+	
+	
+	
+	
+	if "`diparm'" != "" {
+		matrix auxpar=r(table)
+		matrix auxpar = auxpar[1, "_diparm1:"]
+		matrix colnames auxpar = _:
+		ereturn matrix auxpar auxpar
+	}
+	
+	if `"$bc_waldtest"' != ""  {
+		display `"$bc_waldtest"'
+	}
+	
+	if `"$bc_waldindp"' != ""  {
+		display `"$bc_waldindp"'
+	}
+end
+```
+
+
+## Proggram Estimate
 ```
 program Estimate, eclass sortpreserve
 
