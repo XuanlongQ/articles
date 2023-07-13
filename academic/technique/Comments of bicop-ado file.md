@@ -135,15 +135,27 @@ end
 
 
 ## Proggram Estimate
+This section of the Stata program defines a program called `Estimate` with the options `eclass` and `sortpreserve`. Here is a line-by-line description of the code:
+
 ```
 program Estimate, eclass sortpreserve
+```
+This line defines a program called `Estimate` with the options `eclass` and `sortpreserve`. The `eclass` option allows the program to return estimation results as e-class matrices, and the `sortpreserve` option ensures that the order of the variables in the dataset is preserved.
 
+```
 	local cmdline `"bicop `0'"'
-/* drop global variables to be used */
+```
+This line sets up a local macro called `cmdline` with the value of the string `"bicop `0'"'. This string contains the name of the estimation command to be run (`bicop`) and any options specified by the user (`0`).
+
+```
 foreach global in offo1 offo2 Nthr1 Nthr2 copu mix kx1 kx2 waldtest waldindp {
 	macro drop bc_`global'
 }
+```
+These lines drop any global macros that will be used in the estimation. The macro names are constructed using the prefix `bc_` and the names of the variables to be dropped (`offo1`, `offo2`, `Nthr1`, `Nthr2`, `copu`, `mix`, `kx1`, `kx2`, `waldtest`, and `waldindp`).
 
+
+```
 /* syntax taken from biprobit and modified*/
 /* two syntax, handle one at a time */
 
