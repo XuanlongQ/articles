@@ -10,18 +10,24 @@ Twostep's basic syntax is
 ```
 twostep cohort4: reg y1 x1 x2  || edv _b_cons cohort4
 ```
-twostep means the model we use
-cohort4 means the level-2 variables
-reg means the first level regression model
-y1 is dependent variable
-x1 is the first independent variable
-x2 is the second independent variable
+- twostep means the model we use
+
+- cohort4 means the level-2 variables
+
+- reg means the first level regression model
+
+- y1 is dependent variable
+
+- x1 is the first independent variable
+
+- x2 is the second independent variable
 
 so we can we run a basic regression model at level-1 and use cohort4 as my level-2 model
 
 However,
 
 **What should I do If my fisrt level model have two equation?**
+
 we might this command
 ```
 twostep cohort4: `model' y1 x11 x12 y2 x21 x22   || edv _b_cons cohort4
@@ -29,8 +35,9 @@ twostep cohort4: `model' y1 x11 x12 y2 x21 x22   || edv _b_cons cohort4
 
 For simply the question, we ingore the specific model. Then, if you conduct your command, you will find
 
-y1 is assigned to dependent variable
-x11 x12 y2 x21 x22 are assigend to independent variables in a varlist.
+- y1 is assigned to dependent variable
+
+- x11 x12 y2 x21 x22 are assigend to independent variables in a varlist.
 
 It obviously can not match our requirements.
 
