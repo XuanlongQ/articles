@@ -300,7 +300,6 @@ program define twostep_mk2nd
 		  `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank), [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'
 		
 		
-		
 		//statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
 		 // `model' `firstdepvar' `firstindepvar' [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'
           

@@ -135,6 +135,11 @@ statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelc
 
 Hope it can help you !
 
+
 ## References
 1. [The introduction of twostep's pdf - click ](https://www.stata.com/meeting/germany21/slides/Germany21_Giesecke.pdf)
 2. [Simple introduction of two step](https://econpapers.repec.org/software/bocbocode/s459021.htm)
+
+Plus, I wrote a guidelines about how to run `bicop` within `twostep`, you can see the whole code and comments from:
+- [code-twostep_bicop.do](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.do)
+- [comment-twostep_bicop.md](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.md)
