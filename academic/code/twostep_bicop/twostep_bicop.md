@@ -29,26 +29,27 @@ Please follow these steps:
 
 4. Code comments
 
-4.1 Get all variables
-I use `gettoken` function to get all variables and store it in varlist.
+- 4.1 Get all variables
+    I use `gettoken` function to get all variables and store it in varlist.
 
-```
-gettoken firstdepvar rest: varlist
-```
+    ```
+    gettoken firstdepvar rest: varlist
+    ```
 
-you could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)
+**You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
 
-4.2 Run `bicop` model with in `statsby` function
-```
-statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
-`model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank), [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'	
-```
+- 4.2 Run `bicop` model with in `statsby` function
 
-The first level model's command is:
-```
-`model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank),
-```
-You can add to delete variable in this model.
+    ```
+    statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
+    `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank), [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'	
+    ```
 
-you could get more information from [stata handbook-statsby](https://www.stata.com/manuals/dstatsby.pdf)
+    The first level model's command is:
+    ```
+    `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank),
+    ```
+    You can add to delete variable in this model.
+
+**You could get more information from [stata handbook-statsby](https://www.stata.com/manuals/dstatsby.pdf)**
 
