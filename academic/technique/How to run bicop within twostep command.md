@@ -1,4 +1,4 @@
-# How to run bicop within twostep command
+# How to Run bicop within twostep  Command
 
 ## What is twostep in Stata ?
 twostep is a bundle of programs to ease multilevel analyses with the twostep approach. The twostep approach to mulitlevel analysis means to separately estimate a parameter of interest in a unit level data set (e.g. individuals) for all categories of a cluster level variable (e.g. countries, states, schools, etc.). The twostep approach is sometimes seen as superior to the more standard one-step approach (see mixed) if the numbers of observation on the second level becomes small (see Achen 2005). Additionally, two-step mulitlevel analysis may be used for checking the model assumptions of the one-step approach, or for exploratory data analysis of multilevel data.
@@ -141,5 +141,5 @@ Hope it can help you !
 2. [Simple introduction of two step](https://econpapers.repec.org/software/bocbocode/s459021.htm)
 
 Plus, I wrote a guidelines about how to run `bicop` within `twostep`, you can see the whole code and comments from:
-- [code-twostep_bicop.do](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.do)
-- [comment-twostep_bicop.md](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.md)
+- [Code-twostep_bicop.do](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.do)
+- [Comment-twostep_bicop.md](https://github.com/XuanlongQ/articles/blob/main/academic/code/twostep_bicop/twostep_bicop.md)
