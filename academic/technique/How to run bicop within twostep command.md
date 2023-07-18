@@ -135,7 +135,41 @@ statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelc
 
 Hope it can help you !
 
+## Additional information about weights 
+`twostep` supports fweights, aweights and pweights
 
+`bicop` supports pweights, fweights, and iweights
+
+Thus, if you want to add weight variable in stata command, you need to make sure both two levels support that kind of weight when you try to convey parameters.
+
+Based on this concern, when might reckon that `pweights`  are both supported by `twostep` and `bicop`, it can be used in these two commands.
+However, you will find it cannot work when you use `pweights` as your weight.
+
+The reason is twostep does not literally support `pweight`, we can find this code,
+```
+		
+		// Statsby does not allow pweights. I simulate them with aweights and vce(robust)
+		if "`weight'" == "pweight" {
+			local weight "aweight"
+			if "`vce'" == "" {
+				local vce vce(robust)
+			}
+			
+			else {
+				local vce `vce' robust
+				local vce vce(`: list uniq vce')
+			}
+			
+		}	
+```
+
+It means they use `aweight` and `vce` to support `pweight`. However,
+
+`bicop` does not support `aweight`
+
+Thus, it will makes pweight can not run `bicop` withwin `twostep`. And the real reason is function `statsby` that does not support `aweight`.
+- `statsby` is a base function from stata. Thus, if you want to update the revison, you need to go to the base stata source code. I just stop here and Good Luck to you.
+ 
 ## References
 1. [The introduction of twostep's pdf - click ](https://www.stata.com/meeting/germany21/slides/Germany21_Giesecke.pdf)
 2. [Simple introduction of two step](https://econpapers.repec.org/software/bocbocode/s459021.htm)
