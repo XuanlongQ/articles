@@ -11,12 +11,14 @@ Please follow these steps:
    > - You can also rename `twostep_bicop.do` to `twostep.do` and replace origial `twostep.do` file, then you can use it by default command, But you need to delete `capture` grammer at the head of each function.
 
 4. Command
+   
 - `twostep_bicop` do file
   **4.1 conduct model**
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
  ```
- **4.1 list key parameters**
+
+ **4.2 list key parameters**
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
  ```
@@ -28,9 +30,11 @@ Please follow these steps:
   ```
 
 - Other options
+  
   **4.4 copula type**
   Now the default type is `frank`, which has been hard coded.
   if you want to use a new type,you need to go to the `statsby` function,and update a new one
+  
   **4.5 weights**
   - In `twostep`: unitcpr, fweights, aweights and pweights are allowed;
   - In `bicop`: pweights, fweights, and iweights are allowed;
@@ -60,9 +64,9 @@ Please follow these steps:
 
   Therefore, we just add `iweights` input to `twostep`, then we can use `iweight` passing variables.
 
-5. Code comments
+1. Code comments
 
-- 4.1 Get all variables
+-  Get all variables
     I use `gettoken` `parse` `subinstr` function to get all variables and store it in varlist.
 
     ```
@@ -73,11 +77,12 @@ Please follow these steps:
     ```
 
 **You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
+
 **You could get more information from [stata handbook-subinstr](https://www.stata.com/manuals/m-5subinstr.pdf)**
 
 
 
-- 4.2 Run `bicop` model with in `statsby` function
+- Run `bicop` model with in `statsby` function
 
     ```
     statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
@@ -110,16 +115,19 @@ Please follow these steps:
   ```
   bicop (y1=x11 x12) (y2= x21 x22) if cohort4 == 1 [pw=weight],copula(frank)
   ```
+
   the result shows:
   - _se_cons: .14833392
   - _b_cons: 4.441093
 
 - Test the consistence with `twostep` and `bicop`
+  
   In `twostep`:
   ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
   list _se_cons _b_cons
   ```
+
   The result shows:
   - _se_cons: .14833392
   - _b_cons: 4.441093
