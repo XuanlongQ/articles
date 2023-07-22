@@ -42,12 +42,19 @@ version 16
 
 	ParseFirst `firstlevelstring'
 	local firstcmd `r(subcmd)'
+	local bicop_weight `r(weight)' // xuanlong
 	
+	display "firstcmd " "`firstcmd'" // xuanlong
+
  	ParseSecond `secondlevelstring'
 	local clear `r(clear)'
 	local secondcmd `r(subcmd)'
+	
 
+	
+	
 	// Call Subprograms
+
 	if "`r(subcmd)'" == "mk2nd" {
 		quietly d, s
 		if r(changed) == 1 & "`clear'" == "" {
@@ -185,9 +192,10 @@ program define twostep_mk2nd
 	capture _on_colon_parse `0'
 	local bystring `s(before)'
 	local 0 `s(after)'
-	
+
 	// Parse By-String
-   ParseByString `bystring'
+	ParseByString `bystring'
+	
 	local byvar  `r(byvar)'
 	local addstats `r(addstats)'
 	
@@ -199,27 +207,35 @@ program define twostep_mk2nd
 	// xuanlong 17/06/2023
 	// this function only works when the model is bicop 
 	if "`model'" == "bicop" {
+		ParseFirst `0'
+		local weight `r(weight)'
 		
-		// Put all the variables to varlist
-		syntax varlist(fv) [fweight aweight pweight] [if] [in] [, vce(string) NOCONStant Hascons tsscons eform(string) clear] 
 		
-		// get all variables
+		gettoken equations parameters_weight: 0, parse("[]")
+		display "equations: " "`equations'"
 
-		gettoken firstdepvar rest: varlist
-		display "firstdepvar is, " "`firstdepvar'"
+// 		gettoken equation_1 : equations, match(paren)
+// 		display "equation_first******* " "`equation_first'"
+//		
+		// get first equation
+		gettoken equation_1 equation_2: equations, parse(")")	
+		local equation_1: subinstr local equation_1 "(" "", all
+		local equation_1: subinstr local equation_1 "=" " ", all
+		display "equation_1 " "`equation_1'"
 		
-		gettoken firstindepvar1 rest: rest
-		gettoken firstindepvar2 rest: rest
-		// local firstindepvar `firstindepvar1' `firstindepvar2'
-		// display "firstindepvar is, " "`firstindepvar'"
+		// get second equation
+		local equation_2: subinstr local equation_2 ")" "", all
+		local equation_2: subinstr local equation_2 "(" "", all
+		local equation_2: subinstr local equation_2 "=" " ", all
+		display "equation_2 " "`equation_2'"
 		
-		gettoken firstdepvar_e2 rest: rest
-		display "firstdepvar_e2 is, " "`firstdepvar_e2'"
+		GetVarlist `equation_1'
+		local firstdepvar_e1 `r(depvar)'
+		local firstindepvar_e1 `r(indepvar)'
 		
-		gettoken firstdepvar_e2_indep1 rest: rest
-		gettoken firstdepvar_e2_indep2 rest: rest
-		// local firstindepvar_e2 `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'
-		// display "firstindepvar_e2 is, " "`firstindepvar_e2'"
+		GetVarlist `equation_2'
+		local firstdepvar_e2 `r(depvar)'
+		local firstindepvar_e2 `r(indepvar)'		
 	}
 	
 	else {
@@ -230,9 +246,6 @@ program define twostep_mk2nd
 		gettoken firstdepvar firstindepvar: varlist
 		
 	}
-	
-
-
 	
 	// Parse Second Level Information
 	ParseSecond `secondlevel'
@@ -246,7 +259,7 @@ program define twostep_mk2nd
 	tempfile 1stlevelcoefs 2ndlevelvars thisdata 
 	tempvar ifuse
 	
-	quietly {
+	
 		
 		// Swap 2nd level data 
 		if `"`using'"' == `""' {
@@ -277,6 +290,7 @@ program define twostep_mk2nd
 		// Statsby does not allow pweights. I simulate them with aweights and vce(robust)
 		if "`weight'" == "pweight" {
 			local weight "aweight"
+			//local weight "fweight"
 			if "`vce'" == "" {
 				local vce vce(robust)
 			}
@@ -293,12 +307,17 @@ program define twostep_mk2nd
 		local fvops = "`r(fvops)'"=="true"
 
 		// Run Within First Level Models
+		// xuanlong 16/06/2023
+		display "weight is exp " "[`weight'`exp']"
+		local command (`firstdepvar_e1' = `firstindepvar_e1') (`firstdepvar_e2' = `firstindepvar_e2') [`weight'`exp'] ,copula(frank)
+		local model `model' `command'
+		display "Command: "  "`model'"
 		
-		// xuanlong 17/06/2023
-		// Conducting model by statsby command
+	
 		statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
-		  `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank), [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'
+		  `model',  `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'
 		
+
 		
 		//statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
 		 // `model' `firstdepvar' `firstindepvar' [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'
@@ -339,8 +358,23 @@ program define twostep_mk2nd
 		}
 		
 		if "`secondin'" != "" | "`secondif'" != "" keep `secondin' `secondif' 
-	}
+
+
+	
 end
+
+capture program drop GetVarlist
+program define GetVarlist, rclass
+	syntax varlist(fv) [fweight aweight pweight iweight] [if] [in] [, vce(string) NOCONStant Hascons tsscons eform(string) clear] 
+	gettoken depvar indepvar: varlist
+	
+	display "indpendent variables are: " "`indepvar'" "in the getVarlist"
+
+	return local depvar `depvar'
+	return local indepvar `indepvar'
+	return local weight `weight'`exp'
+end
+
 
 * edv (Re-Implentation of Lewis/Linzer's edvreg)
 capture program drop twostep_edv
@@ -827,9 +861,8 @@ end
 * Parse Firstlevelcommand
 capture program drop ParseFirst
 program define ParseFirst, rclass 
-	syntax anything [if] [in] [aweight fweight pweight] [, *]
+	syntax anything [if] [in] [aweight fweight pweight iweight] [, *]
 	gettoken subcmd firstlevelvars: anything
-
 	return local subcmd `subcmd'
 	return local firstlevelvars `firstlevelvars'
 	return local if `if'
@@ -921,7 +954,7 @@ program define GrepIfVarnames, rclass
 	return local iflist `iflist'
 end
 
-* Remove FV notation to have the unique varnames
+* Remove FV notation to have the unique varname
 capture program drop RemoveFvBits
 program define RemoveFvBits, rclass
 	syntax anything(name=secondindepvar) 
@@ -936,7 +969,6 @@ end
 
 
 // xuanlong
-* twostep cohort4: bicop y1 x11 x12 y2 x21 x22 || edv _b_cons cohort4
-twostep cohort4: bicop y1 x11 x12 y2 x21 x22 || mk2nd _all
-
+* twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [gw=weight] || edv _b_cons cohort4
+twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
 

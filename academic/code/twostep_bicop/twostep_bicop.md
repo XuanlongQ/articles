@@ -11,16 +11,16 @@ Please follow these steps:
 3. Command
 - bicop command: 
   ```
-  bicop (y1=x11 x12) (y2=x21 x22),copula(frank)
+  bicop (y1=x11 x12) (y2= x21 x22) [iw=weight],copula(frank)
   ```
 - twostep_bicop command:
   **conduct model**
   ```
-  twostep cohort4: bicop y1 x11 x12 y2 x21 x22 || edv _b_cons cohort4
+  twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
   ```
   **list all variables**
   ```
-  twostep cohort4: bicop y1 x11 x12 y2 x21 x22 || mk2nd _all
+  twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || mk2nd _all
   ```
 
   **copula type**
@@ -30,24 +30,32 @@ Please follow these steps:
 4. Code comments
 
 - 4.1 Get all variables
-    I use `gettoken` function to get all variables and store it in varlist.
+    I use `gettoken` `parse` `subinstr` function to get all variables and store it in varlist.
 
     ```
-    gettoken firstdepvar rest: varlist
+    gettoken equation_1 equation_2: equations, parse(")")	
+		local equation_1: subinstr local equation_1 "(" "", all
+		local equation_1: subinstr local equation_1 "=" " ", all
+		display "equation_1 " "`equation_1'"
     ```
 
 **You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
+**You could get more information from [stata handbook-subinstr](https://www.stata.com/manuals/m-5subinstr.pdf)**
+
+
 
 - 4.2 Run `bicop` model with in `statsby` function
 
     ```
     statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
-    `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank), [`weight'`exp'] `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'	
+		  `model',  `if' `in',  `vce' `noconstant' `hasconstant' `tsconstant'	
     ```
 
     The first level model's command is:
     ```
-    `model' (`firstdepvar' = `firstindepvar1' `firstindepvar2') (`firstdepvar_e2' = `firstdepvar_e2_indep1' `firstdepvar_e2_indep2'), copula(frank),
+    local command (`firstdepvar_e1' = `firstindepvar_e1') (`firstdepvar_e2' = `firstindepvar_e2') [`weight'`exp'] ,copula(frank)
+		local model `model' `command'
+		display "Command: "  "`model'"
     ```
     You can add to delete variable in this model.
 
