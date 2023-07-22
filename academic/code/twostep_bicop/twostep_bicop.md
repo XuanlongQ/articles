@@ -19,7 +19,7 @@ Please follow these steps:
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
  ```
 
- **4.2 list key parameters**
+  **4.2 list key parameters**
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
  ```
@@ -68,7 +68,7 @@ Please follow these steps:
 
   Therefore, we just add `iweights` input to `twostep`, then we can use `iweight` passing variables.
 
-1. Code comments
+5. Code comments
 
 -  Get all variables
     I use `gettoken` `parse` `subinstr` function to get all variables and store it in varlist.
@@ -80,9 +80,8 @@ Please follow these steps:
 		display "equation_1 " "`equation_1'"
     ```
 
-**You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
-
-**You could get more information from [stata handbook-subinstr](https://www.stata.com/manuals/m-5subinstr.pdf)**
+  > **You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
+  > **You could get more information from [stata handbook-subinstr](https://www.stata.com/manuals/m-5subinstr.pdf)**
 
 
 
