@@ -15,14 +15,14 @@ Please follow these steps:
 - `twostep_bicop` do file
   
   **4.1 conduct model**
- ```
+  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
- ```
- 
+  ```
+  
   **4.2 list key parameters**
- ```
+  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
- ```
+  ```
 
 - Verify the correctness in `bicop` file
   
@@ -36,6 +36,7 @@ Please follow these steps:
   **4.4 copula type**
 
   Now the default type is `frank`, which has been hard coded.
+
   if you want to use a new type,you need to go to the `statsby` function,and update a new one
   
   **4.5 weights**
@@ -71,6 +72,7 @@ Please follow these steps:
 5. Code comments
 
 -  Get all variables
+- 
     I use `gettoken` `parse` `subinstr` function to get all variables and store it in varlist.
 
     ```
@@ -106,7 +108,9 @@ Please follow these steps:
 6. Test the correctness
 
 - Test the weights
+  
   In `bicop`:
+
   test the result between `iweight` and `pweight`
   ```
   1. bicop (y1=x11 x12) (y2= x21 x22) [iw=weight],copula(frank)
@@ -115,7 +119,9 @@ Please follow these steps:
   The results are same, thus we could know the `iweight` has converted to `pweight`
 
 - Test the se and coeffecients
+  
   In `bicop`:
+
   ```
   bicop (y1=x11 x12) (y2= x21 x22) if cohort4 == 1 [pw=weight],copula(frank)
   ```
@@ -127,6 +133,7 @@ Please follow these steps:
 - Test the consistence with `twostep` and `bicop`
   
   In `twostep`:
+
   ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
   list _se_cons _b_cons
