@@ -49,10 +49,6 @@ version 16
  	ParseSecond `secondlevelstring'
 	local clear `r(clear)'
 	local secondcmd `r(subcmd)'
-	
-
-	
-	
 	// Call Subprograms
 
 	if "`r(subcmd)'" == "mk2nd" {
@@ -215,7 +211,7 @@ program define twostep_mk2nd
 		display "equations: " "`equations'"
 
 // 		gettoken equation_1 : equations, match(paren)
-// 		display "equation_first******* " "`equation_first'"
+// 		display "equation_1 " "`equation_first'"
 //		
 		// get first equation
 		gettoken equation_1 equation_2: equations, parse(")")	
@@ -259,8 +255,7 @@ program define twostep_mk2nd
 	tempfile 1stlevelcoefs 2ndlevelvars thisdata 
 	tempvar ifuse
 	
-	
-		
+	quietly {
 		// Swap 2nd level data 
 		if `"`using'"' == `""' {
 			fvexpand `secondindepvar'
@@ -358,7 +353,7 @@ program define twostep_mk2nd
 		}
 		
 		if "`secondin'" != "" | "`secondif'" != "" keep `secondin' `secondif' 
-
+	}
 
 	
 end
@@ -368,7 +363,7 @@ program define GetVarlist, rclass
 	syntax varlist(fv) [fweight aweight pweight iweight] [if] [in] [, vce(string) NOCONStant Hascons tsscons eform(string) clear] 
 	gettoken depvar indepvar: varlist
 	
-	display "indpendent variables are: " "`indepvar'" "in the getVarlist"
+	display "indpendent variables are: " "`indepvar'" " in the getVarlist"
 
 	return local depvar `depvar'
 	return local indepvar `indepvar'
@@ -969,6 +964,6 @@ end
 
 
 // xuanlong
-* twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [gw=weight] || edv _b_cons cohort4
+* twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
 twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
 
