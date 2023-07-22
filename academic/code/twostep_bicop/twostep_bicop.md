@@ -18,7 +18,7 @@ Please follow these steps:
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
  ```
-
+ 
   **4.2 list key parameters**
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
@@ -81,6 +81,7 @@ Please follow these steps:
     ```
 
   > **You could get more information from [stata handbook-gettoken](https://www.stata.com/manuals/pgettoken.pdf)**
+
   > **You could get more information from [stata handbook-subinstr](https://www.stata.com/manuals/m-5subinstr.pdf)**
 
 
