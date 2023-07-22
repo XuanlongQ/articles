@@ -13,6 +13,7 @@ Please follow these steps:
 4. Command
    
 - `twostep_bicop` do file
+  
   **4.1 conduct model**
  ```
   twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
@@ -24,6 +25,7 @@ Please follow these steps:
  ```
 
 - Verify the correctness in `bicop` file
+  
   **4.3 bicop command** 
   ```
   bicop (y1=x11 x12) (y2= x21 x22) [iw=weight],copula(frank)
@@ -32,10 +34,12 @@ Please follow these steps:
 - Other options
   
   **4.4 copula type**
+
   Now the default type is `frank`, which has been hard coded.
   if you want to use a new type,you need to go to the `statsby` function,and update a new one
   
   **4.5 weights**
+  
   - In `twostep`: unitcpr, fweights, aweights and pweights are allowed;
   - In `bicop`: pweights, fweights, and iweights are allowed;
 
