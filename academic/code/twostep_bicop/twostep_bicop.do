@@ -202,37 +202,7 @@ program define twostep_mk2nd
 	
 	// xuanlong 17/06/2023
 	// this function only works when the model is bicop 
-	if "`model'" == "bicop" {
-		ParseFirst `0'
-		local weight `r(weight)'
-		
-		
-		gettoken equations parameters_weight: 0, parse("[]")
-		display "equations: " "`equations'"
-
-// 		gettoken equation_1 : equations, match(paren)
-// 		display "equation_1 " "`equation_first'"
-//		
-		// get first equation
-		gettoken equation_1 equation_2: equations, parse(")")	
-		local equation_1: subinstr local equation_1 "(" "", all
-		local equation_1: subinstr local equation_1 "=" " ", all
-		display "equation_1 " "`equation_1'"
-		
-		// get second equation
-		local equation_2: subinstr local equation_2 ")" "", all
-		local equation_2: subinstr local equation_2 "(" "", all
-		local equation_2: subinstr local equation_2 "=" " ", all
-		display "equation_2 " "`equation_2'"
-		
-		GetVarlist `equation_1'
-		local firstdepvar_e1 `r(depvar)'
-		local firstindepvar_e1 `r(indepvar)'
-		
-		GetVarlist `equation_2'
-		local firstdepvar_e2 `r(depvar)'
-		local firstindepvar_e2 `r(indepvar)'		
-	}
+	
 	
 	else {
 		syntax varlist(fv)  ///
@@ -302,11 +272,7 @@ program define twostep_mk2nd
 		local fvops = "`r(fvops)'"=="true"
 
 		// Run Within First Level Models
-		// xuanlong 16/06/2023
-		display "weight is exp " "[`weight'`exp']"
-		local command (`firstdepvar_e1' = `firstindepvar_e1') (`firstdepvar_e2' = `firstindepvar_e2') [`weight'`exp'] ,copula(frank)
-		local model `model' `command'
-		display "Command: "  "`model'"
+
 		
 	
 		statsby _b _se _n_model = e(N) `addstats', `clear' by(`byvar') saving(`1stlevelcoefs', double):  ///
@@ -963,7 +929,5 @@ end
 
 
 
-// xuanlong
-* twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw=weight] || edv _b_cons cohort4
-twostep cohort4: bicop (y1=x11 x12) (y2= x21 x22) [iw = weight] || mk2nd _all
+
 
