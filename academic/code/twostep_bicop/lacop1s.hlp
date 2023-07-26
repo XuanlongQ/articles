@@ -1,30 +1,21 @@
 {smcl}
 {* 04Sep2006}{...}
-{cmd:help bioprobit}
+{cmd:help lacop1s}
 {hline}
 
 {title:Title}
 
 {p2colset 5 20 22 2}{...}
-{p2col :{hi: bioprobit} {hline 2}}Bivariate ordered probit regression{p_end}
+{p2col :{hi: lacop1s} {hline 2}}Revison of Bivariate ordered probit regression{p_end}
 {p2colreset}{...}
 
 
 {title:Syntax}
 
-{phang}Bivariate ordered probit model
+{phang}Revison of Simultaneous bivariate ordered probit model
 
 {p 8 17 2}
-{cmd:bioprobit}
-{it:{help depvar:depvar1} depvar2} {varlist}
-{ifin} {weight}
-[{cmd:,}
-{it:{help bioprobit##options:options}}]
-
-{phang}Simultaneous bivariate ordered probit model
-
-{p 8 17 2}
-{cmd:bioprobit}
+{cmd:lacop1s}
 ({it:{help depvar:depvar1}} [=] {varlist:1}) ({it:{help depvar:depvar2}} [=] {varlist:2})
 {ifin}
 {weight}
@@ -73,16 +64,16 @@
 {synoptline}
 {p2colreset}{...}
 {p 4 6 2}
-{opt fweight}s, {opt iweight}s, and {opt pweight}s are allowed;see {help weight}.{p_end}
+Only {opt pweight}s or None weights are allowed in lacop1s;see {help weight}.{p_end}
 
 {title:Description}
 
 {pstd}
-{opt bioprobit} fits maximum-likelihood two-equation ordered probit models of ordinal variables
-{depvar:1} and {depvar:2} on the independent variables {indepvars:1} and {indepvars:2}.
-The actual values taken on by dependent variables are irrelevant, except that larger values are assumed to
-correspond to "higher" outcomes.  //Up to 50 outcomes are allowed in Stata/SE
-and Intercooled Stata, and up to 20 outcomes in Small Stata//.
+{opt lacop1s} lacop1s is a tiny revision version of bicop, all the parameters ara as same as bicop command
+except {opt weight} parameters. In lacop1s, {opt iweights} and {opt pweights} are compulsory convert to {opt pweights}.
+
+{pstd}
+More details about bicop, please refer to {helpb biprobit}.
 
 {pstd}
 See {help logistic estimation commands} for a list of related estimation
@@ -154,7 +145,7 @@ xb2 + offset2.
 
 {title:Examples}
 
-{phang}{cmd:. bioprobit headroom foreign price length mpg  turn}{p_end}
+{phang}{cmd:.  lacop1s (y1=x11 x12) (y2= x21 x22) [iw=weight],copula(frank)} {p_end}
 
 
 {title:Also see}
