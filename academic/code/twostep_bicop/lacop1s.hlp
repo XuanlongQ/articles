@@ -147,6 +147,17 @@ xb2 + offset2.
 
 {phang}{cmd:.  lacop1s (y1=x11 x12) (y2= x21 x22) [iw=weight],copula(frank)} {p_end}
 
+{marker author}{...}
+{title:Authors}
+
+{ opt . This version revised by }
+{pstd}
+Xuanlong Qin, The Chinese University of Hong Kong{break}
+email: {browse "xuanlong@link.cuhk.edu.hk":xuanlong@link.cuhk.edu.hk}
+{break}
+web: {browse "https://www.xuanlong.site/"}
+{p_end}
+
 
 {title:Also see}
 

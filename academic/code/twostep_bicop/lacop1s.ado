@@ -28,8 +28,6 @@ program lacop1s
 end
 
 
-
-
 program Replay, eclass
 	syntax [, Level(cilevel)]
 	
