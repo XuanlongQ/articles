@@ -226,6 +226,14 @@ email: {browse "johannes.giesecke@hu-berlin.de":johannes.giesecke@hu-berlin.de"}
 web: {browse "https://www.sowi.hu-berlin.de/de/lehrbereiche/empisoz/a-z/giesecke"}
 {p_end}
 
+{ opt . This version revised by }
+{pstd}
+Xuanlong Qin, The Chinese University of Hong Kong{break}
+email: {browse "xuanlong@link.cuhk.edu.hk":xuanlong@link.cuhk.edu.hk}
+{break}
+web: {browse "https://www.xuanlong.site/"}
+{p_end}
+
 {marker references}{...}
 {title:References}
 
